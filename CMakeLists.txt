@@ -1,46 +1,87 @@
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 2.8)
+
 project(RUCE)
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+if(TARGET RUCE)
+    return()
 endif()
 
-add_definitions(-std=gnu99 -Wall)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    add_definitions(-march=x86-64 -mtune=generic -mtune=core2 -mtune=core-avx-i)
-elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    add_definitions(-march=i686 -mtune=generic -mtune=core2 -mtune=core-avx-i)
+if(NOT MSVC)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Og")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} -s")
 else()
-    message(FATAL_ERROR "Your system is unsupported!")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Ox /GL")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 endif()
 
-set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
-set(CMAKE_C_FLAGS_RELEASE "-Ofast -DNDEBUG")
+include(Version.cmake)
+configure_file("src/Config.h.in" "Config.h")
 
-set(CMAKE_LD_FLAGS_DEBUG "-Wl,-O0")
-set(CMAKE_LD_FLAGS_RELEASE "-Wl,-O1,--as-needed,--sort-common")
+# RUCE.dll
+file(GLOB_RECURSE SRC_SOURCES "src/*.c")
+add_library(RUCE SHARED ${SRC_SOURCES})
+set_target_properties(RUCE PROPERTIES
+    C_STANDARD 99  # Requires CMake 3.1
+    POSITION_INDEPENDENT_CODE ON
+)
+target_include_directories(RUCE PRIVATE "src")
+target_link_libraries(RUCE m)
 
-include(GNUInstallDirs)
+add_subdirectory(external/RUtil2)
+add_subdirectory(external/CVESVP)
+add_subdirectory(external/cJSON)
+add_subdirectory(external/cvs)
+target_link_libraries(RUCE RUtil2 CVESVP cJSON fnmatch_cvs)
 
-# uninstall target
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+# RUCE.lib
+add_library(RUCE_s STATIC ${SRC_SOURCES})
+set_target_properties(RUCE_s PROPERTIES
+    C_STANDARD 99
+    POSITION_INDEPENDENT_CODE ON
+)
+target_include_directories(RUCE_s PRIVATE "src")
+target_link_libraries(RUCE_s m)
+target_link_libraries(RUCE_s RUtil2 CVESVP cJSON fnmatch_cvs)
 
-add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+# RUCE_CLI.exe
+file(GLOB_RECURSE SRC_CLI_SOURCES "cli/*.c")
+add_executable(RUCE_CLI ${SRC_CLI_SOURCES})
+set_target_properties(RUCE_CLI PROPERTIES
+    C_STANDARD 99
+    POSITION_INDEPENDENT_CODE ON
+)
+target_include_directories(RUCE_CLI PRIVATE "src" "${CMAKE_CURRENT_BINARY_DIR}")
+target_link_libraries(RUCE_CLI RUCE_s cJSON)
 
-include(TestBigEndian)
-test_big_endian(IS_BIG_ENDIAN)
-if(IS_BIG_ENDIAN)
-    add_definitions(-D__BIG_ENDIAN__)
+# Arrange header files for external use
+add_custom_command(TARGET RUCE POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "include/RUCE")
+add_custom_command(TARGET RUCE POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/RUCE.h" "include/RUCE.h")
+file(GLOB_RECURSE SRC_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/src" "src/*.h")
+foreach(SRC_HEADER ${SRC_HEADERS})
+    add_custom_command(TARGET RUCE POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/${SRC_HEADER}" "include/RUCE/${SRC_HEADER}")
+endforeach()
+target_include_directories(RUCE INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
+
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")  # Test subproject
+    include(CTest)
+    #add_subdirectory(test)
 endif()
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/FileCopy.cmake)
+# Installation
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+    install(TARGETS RUCE RUCE_CLI
+        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION "lib"
+        ARCHIVE DESTINATION "lib"
+    )
+    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include"
+        DESTINATION "include"
+    )
+endif()
 
-enable_testing()
-
-add_subdirectory(src)
-add_subdirectory(test)
+# Workaround for CMake version older than 3.1
+# Remove this and set the minimum required version to 3.1
+# when we make sure everyone is having CMake 3.1
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
