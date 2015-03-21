@@ -29,8 +29,7 @@ target_link_libraries(RUCE m)
 add_subdirectory(external/RUtil2)
 add_subdirectory(external/CVESVP)
 add_subdirectory(external/cJSON)
-add_subdirectory(external/cvs)
-target_link_libraries(RUCE RUtil2 CVESVP cJSON fnmatch_cvs)
+target_link_libraries(RUCE RUtil2 CVESVP cJSON)
 
 # RUCE.lib
 add_library(RUCE_s STATIC ${SRC_SOURCES})
