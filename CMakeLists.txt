@@ -16,9 +16,6 @@ else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 endif()
 
-include(Version.cmake)
-configure_file("src/Config.h.in" "Config.h")
-
 # RUCE.dll
 file(GLOB_RECURSE SRC_SOURCES "src/*.c")
 add_library(RUCE SHARED ${SRC_SOURCES})
