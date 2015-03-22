@@ -12,6 +12,16 @@ RClass(_RTClassName)
     
     //Public
     char GenPhase;
+    int LeftBound;
+    float DThreshold;  //Deviation threshold for harmonics
+    float DFThreshold; //Deviation threshold for F0
+    
+    struct
+    {
+        _T1 Period;
+        _T1 Alpha;
+        int Iteration;
+    } GDOption;
     
     _List_Int       PulseList;
     _List_GnrcFrame _T4;
