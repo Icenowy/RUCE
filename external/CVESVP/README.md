@@ -20,22 +20,23 @@ Todo & Plan List
 - [x] Glottal pulse & phase reconstruction in `SinusoidItersizer`
 - [x] Implement `HNMItersizer` based on `SinusoidItersizer`(in: `Position` `HNMFrame`, out: `Wave`)
 - [x] Implement `F0Iterlyzer`(in: `Wave`, out: `Real`)
-- [ ] Phase control points for `SinusoidItersizer`
+- [x] Phase control points for `SinusoidItersizer`
+- [ ] SNT analysis
+- [ ] Turbulent Noise reconstruction in `HNMItersizer`
 
 ####Step2: Structural Changes & Minor Improvements
 
 - [x] Replace `CDSP2_If_Debug_Check` with `RAssert`
 - [x] Down integrate Lists to CVEDSP2
 - [x] Conversion between `HNMFrame` and `HNMContour`
-- [ ] Implement `F0FromWave_YIN`
-- [ ] Implement `GainIterfector` in CVEDSP2(in: `Wave` `Wave`, out: `Wave`)
+- [x] Implement `F0FromWave_YIN`
+- [x] Implement `GainIterfector` in CVEDSP2(in: `Wave` `Wave`, out: `Wave`)
 - [ ] Implement `MixIterfector` in CVEDSP2(in: `Wave` `Wave`, out: `Wave`)
 - [ ] Implement `PulseItersizer` in CVEDSP2(in: `Position`, out: `Wave`)
-- [ ] Implement `TurbIterfector`(in: `Wave` `Wave`, out: `Wave`)
 
 ####Step3: Voice Manipulation
 
-- [ ] Timbre adjustment related to pitch scaling
+- [x] Timbre adjustment related to pitch scaling
 - [ ] Implement `GenKlatt` based on `FWindow`
 - [ ] Implement `EpRParam` structure
 - [ ] Implement `EpRParam_ToHNMContour`
@@ -48,4 +49,17 @@ Todo & Plan List
 - [ ] Implement `VMaxIndex`, `VMinIndex`, `VMaxEI`, `VMinEI`, `VLog` in RFNL
 - [ ] More interpolation kernels(Cubic, Sinc) in RFNL
 - [ ] Default analysis window for `_F0.rc`/Window Cache
+
+Bibilography
+===
+
+* Serra, X. 1989. "A System for Sound Analysis/Transformation/Synthesis based on a Deterministic plus Stochastic Decomposition" Ph.D. Thesis. Stanford University.
+
+* Sanjaume, Jordi Bonada. Voice processing and synthesis by performance sampling and spectral models. Diss. Universitat Pompeu Fabra, 2008.
+
+* Quatieri, Thomas F., and R. McAulay. "Phase coherence in speech reconstruction for enhancement and coding applications." Acoustics, Speech, and Signal Processing, 1989. ICASSP-89., 1989 International Conference on. IEEE, 1989.
+
+* De Cheveigné, Alain, and Hideki Kawahara. "YIN, a fundamental frequency estimator for speech and music." The Journal of the Acoustical Society of America 111.4 (2002): 1917-1930.
+
+* Childers, Donald G., and C. K. Lee. "Vocal quality factors: Analysis, synthesis, and perception." the Journal of the Acoustical Society of America 90.5 (1991): 2394-2410.
 

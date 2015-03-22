@@ -129,12 +129,15 @@ RTMethod(int , CSVP_SinusoidalBase, IterNextTo, int Position)
     {
         _T1 Freq = RCall(_PMatch, Query)(This -> RefF0,
             This -> PulseList.Frames[i]).Y;
-        _T1 Candidate = RCall(CSVP_F0FromSuccSpectrum, _T1)(
+        _T1 Candidate = RCall(CSVP_F0FromSuccSpectrum_Peak, _T1)(
             & This -> Sublyzer0 -> SpecList.Frames[i],
             & This -> Sublyzer1 -> SpecList.Frames[i], 1,
             Freq * 0.7, Freq * 1.6);
         if(! (Candidate > 50 && Candidate < 1500))
-            return -1;
+            if(i == 0)
+                Candidate = Freq;
+            else
+                Candidate = This -> FreqList[i - 1];
         This -> FreqList[i] = Candidate;
         //printf("%d %f\n", This -> PulseList.Frames[i], Candidate);
     }
@@ -163,14 +166,16 @@ RTMethod(int , CSVP_SinusoidalBase, PrevTo, int Position)
     {
         _T1 Freq = RCall(_PMatch, Query)(This -> RefF0,
             This -> PulseList.Frames[i]).Y;
-        _T1 Candidate = RCall(CSVP_F0FromSuccSpectrum, _T1)(
+        _T1 Candidate = RCall(CSVP_F0FromSuccSpectrum_Peak, _T1)(
             & This -> Sublyzer0 -> SpecList.Frames[i],
             & This -> Sublyzer1 -> SpecList.Frames[i], 1,
             Freq * 0.7, Freq * 1.4);
         if(! (Candidate > 50 && Candidate < 1500))
-            return -1;
+            if(i == This -> PulseList.Frames_Index)
+                Candidate = Freq;
+            else
+                Candidate = This -> FreqList[i + 1];
         This -> FreqList[i] = Candidate;
-        //printf("%d %f\n", This -> PulseList.Frames[i], Candidate);
     }
     
     RCall(_STFTIterlyzer, SetPosition)(This -> Sublyzer0,

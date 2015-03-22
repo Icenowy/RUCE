@@ -1,6 +1,7 @@
 #ifndef CSVP_MISCUTILS_H
 #define CSVP_MISCUTILS_H
 
+#include <CVEDSP2.h>
 #include <RUtil2.h>
 
 #if 0

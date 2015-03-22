@@ -16,7 +16,11 @@ RClass(CDSP2_List_Int)
 void CDSP2_List_Int_CtorSize(First, int Size);
 void CDSP2_List_Int_Resize(First, int Size);
 void CDSP2_List_Int_From(First, CDSP2_List_Int* Sorc);
+void CDSP2_List_Int_FromArray(First, int* Sorc, int Sorc_Index);
 void CDSP2_List_Int_Clear(First);
+
+void CDSP2_List_Int_ToPMatch_Float(First, PMatch_Float_Float* Dest);
+void CDSP2_List_Int_ToPMatch_Double(First, PMatch_Double_Double* Dest);
 
 int  CDSP2_List_Int_Fetch(First, int Index);
 int  CDSP2_List_Int_IndexBefore(First, int Position);

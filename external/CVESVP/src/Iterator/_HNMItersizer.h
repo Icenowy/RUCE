@@ -14,7 +14,13 @@ RClass(_RTClassName)
     _List_Int      PulseList;
     _List_HNMFrame HNMList;
     
+    struct
+    {
+        char PhaseControl;
+    } Option;
+    
     //Private
+    char SeparateNoiz;
     _SinusoidItersizer* SubsizerS;
     _STFTItersizer* SubsizerF;
     int HopSize;
@@ -28,6 +34,7 @@ RTMethod(void, CSVP_HNMItersizer, From, _RTClassName* Sorc);
 RTMethod(void, CSVP_HNMItersizer, Clear);
 
 RTMethod(void, CSVP_HNMItersizer, SetWave, void* Sorc);
+RTMethod(void, CSVP_HNMItersizer, SetNoizWave, void* Sorc);
 RTMethod(void, CSVP_HNMItersizer, SetInitPhase, _DataFrame* Sorc);
 RTMethod(void, CSVP_HNMItersizer, SetPosition, int Position);
 RTMethod(void, CSVP_HNMItersizer, SetHopSize, int HopSize);
@@ -37,6 +44,7 @@ RTMethod(void, CSVP_HNMItersizer, IterNextTo, int Position);
 RTMethod(void, CSVP_HNMItersizer, PrevTo, int Position);
 
 RTMethod(void, CSVP_HNMItersizer, Add, _HNMFrame* Sorc, int Position);
+RTMethod(void, CSVP_HNMItersizer, AddPhase, _DataFrame* Sorc, int Position);
 
 #undef  _Wave
 #undef  _List_Int
