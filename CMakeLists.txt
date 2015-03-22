@@ -39,7 +39,7 @@ set_target_properties(RUCE_s PROPERTIES
 )
 target_include_directories(RUCE_s PRIVATE "src")
 target_link_libraries(RUCE_s m)
-target_link_libraries(RUCE_s RUtil2 CVESVP cJSON fnmatch_cvs)
+target_link_libraries(RUCE_s RUtil2 CVESVP cJSON)
 
 # RUCE_CLI.exe
 file(GLOB_RECURSE SRC_CLI_SOURCES "cli/*.c")
