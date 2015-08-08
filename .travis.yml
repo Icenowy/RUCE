@@ -2,7 +2,7 @@ language: c
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -qq install build-essential libtool make cmake libsndfile1-dev
+  - sudo apt-get -qq install build-essential make cmake libsndfile1-dev
 
 install:
   - mkdir build
