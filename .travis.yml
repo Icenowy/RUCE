@@ -15,7 +15,7 @@ before_install:
 install:
   - mkdir build
   - cd build
-  - cmake .. -DUSE_SYSTEM_SNDFILE=1
+  - CC=gcc-4.9 CXX=g++-4.9 cmake .. -DUSE_SYSTEM_SNDFILE=1
 
 script:
   - make -j4
