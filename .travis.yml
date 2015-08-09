@@ -9,7 +9,7 @@ before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
   - wget http://www.cmake.org/files/v3.3/cmake-3.3.0.tar.gz
   - tar xf cmake-3.3.0.tar.gz
-  - pushd cmake-3.3.0 && ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.3.0 && make && make install
+  - pushd cmake-3.3.0 && ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.3.0 && make -j5 && sudo make install
   - popd
 
 install:
