@@ -3,7 +3,7 @@ language: c
 before_install:
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
   - sudo apt-get update
-  - sudo apt-get install build-essential make cmake libsndfile1-dev 
+  - sudo apt-get install build-essential make cmake libsndfile1-dev liblzma-dev
   - sudo apt-get build-dep cmake
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
